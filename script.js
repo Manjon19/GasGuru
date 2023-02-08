@@ -12,8 +12,24 @@ buscar.addEventListener("keydown", (event) => {
 
     getDataAPI(locationID);
     munGasList.forEach(elemento => {
-      
-      createGasCard(elemento);
+      let nuevoElemento = {}
+      for (let key in elemento) {
+        switch (key) {
+          case "Precio Gasoleo A":
+            nuevoElemento["PrecioGasoleoA"] = elemento[key];
+            break;
+          case "Precio Gasolina 95":
+            nuevoElemento["PrecioGasolina95"] = elemento[key];
+            break;
+          case "Precio Gasolina 98":
+            nuevoElemento["PrecioGasolina98"] = elemento[key];
+            break;
+          default:
+            nuevoElemento[key] = elemento[key];
+            break;
+        }
+        createGasCard(nuevoElemento);
+      }
     });
   }
 })
