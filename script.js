@@ -3,35 +3,32 @@ const ca = document.getElementById("CCAA");
 let arrayAPI = [];
 let locationList;
 let ccaaList;
+let munGasList = [];
 getLocationList();
 getCCAAList();
-let gen = "";
-ccaaList.forEach(element => {
-  gen += element.CCAA + "<br>";
-})
-ca.innerHTML = gen
-buscar.addEventListener("keypress", (event) => {
+buscar.addEventListener("keypress", async (event) => {
   if (event.key == "Enter") {
     let locationID = locationList.find(element => element.Municipio == buscar.value).IDMunicipio;
 
-    let munGasList = getDataAPI(locationID);
+    getDataAPI(locationID);
     munGasList.forEach(elemento => {
       createGasCard(elemento);
     });
   }
 })
 
-function createGasCard(){
-  let generado=""
-		generado+=`
+function createGasCard(elemento) {
+  console.log(elemento)
+  let generado = ""
+  generado += `
 		<div class="carta" id="carta">
 				<p><i>-Municipio: </i>${elemento.Municipio}</p>
-        <p><i>-Diesel: </i>${elemento.Precio_Gasoleo_A}</p>
-        <p><i>-Gasolina 95: </i>${elemento.Precio_Gasolina_95}</p>
-        <p><i>-Gasolina 98: </i>${elemento.Precio_Gasolina_98}</p>
+        <p><i>-Diesel: </i>${elemento.PrecioGasoleoA}</p>
+        <p><i>-Gasolina 95: </i>${elemento.PrecioGasolina95}</p>
+        <p><i>-Gasolina 98: </i>${elemento.PrecioGasolina98}</p>
 		</div>
 		`
-	document.getElementById("contenedorResultados").innerHTML = generado
+  document.getElementById("contenedorResultados").innerHTML = generado
 }
 
 
@@ -60,7 +57,7 @@ async function getDataAPI(locationId) {
   await fetch("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/" + locationId)
     .then(response => response.json()).then(
       data => {
-        console.log(data.ListaEESSPrecio);
+        munGasList = data.ListaEESSPrecio;
       }
     )
 }
