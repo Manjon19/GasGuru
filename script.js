@@ -6,19 +6,20 @@ let ccaaList;
 let munGasList = [];
 getLocationList();
 getCCAAList();
-buscar.addEventListener("keypress", async (event) => {
+buscar.addEventListener("keydown", (event) => {
   if (event.key == "Enter") {
     let locationID = locationList.find(element => element.Municipio == buscar.value).IDMunicipio;
 
     getDataAPI(locationID);
     munGasList.forEach(elemento => {
+      
       createGasCard(elemento);
     });
   }
 })
 
 function createGasCard(elemento) {
-  console.log(elemento)
+  console.log(elemento);
   let generado = ""
   generado += `
 		<div class="carta" id="carta">
