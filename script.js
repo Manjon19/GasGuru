@@ -2,6 +2,7 @@ const buscar = document.getElementById("buscar");
 let arrayAPI = [];
 let locationList;
 getLocationList();
+
 buscar.addEventListener("keypress", (event) => {
   if (event.key == "Enter") {
     console.log(locationList);
@@ -12,7 +13,7 @@ buscar.addEventListener("keypress", (event) => {
 
 
 async function getLocationList() {
-  await fetch("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/Municipios/")
+  await fetch("./Municipios.json")
     .then(response => response.json())
     .then(data => {
       locationList = data;
