@@ -21,6 +21,20 @@ buscar.addEventListener("keypress", (event) => {
   }
 })
 
+function createGasCard(){
+  let generado=""
+		generado+=`
+		<div class="carta" id="carta">
+				<p><i>-Municipio: </i>${elemento.Municipio}</p>
+        <p><i>-Diesel: </i>${elemento.Precio_Gasoleo_A}</p>
+        <p><i>-Gasolina 95: </i>${elemento.Precio_Gasolina_95}</p>
+        <p><i>-Gasolina 98: </i>${elemento.Precio_Gasolina_98}</p>
+		</div>
+		`
+	document.getElementById("contenedorResultados").innerHTML = generado
+}
+
+
 async function getLocationList() {
   await fetch("./JSONS/Municipios.json")
     .then(response => response.json())
