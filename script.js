@@ -16,26 +16,41 @@ buscar.addEventListener("keydown", (event) => {
       for (let key in elemento) {
         switch (key) {
           case "Precio Gasoleo A":
-            nuevoElemento["PrecioGasoleoA"] = elemento[key];
+
+            if (elemento[key] == "") {
+              nuevoElemento["PrecioGasoleoA"] = "No disponible";
+            } else {
+              nuevoElemento["PrecioGasoleoA"] = elemento[key];
+            }
             break;
-          case "Precio Gasolina 95":
-            nuevoElemento["PrecioGasolina95"] = elemento[key];
+          case "Precio Gasolina 95 E5":
+            if (elemento[key] == "") {
+              nuevoElemento["PrecioGasolina95"] = "No disponible";
+            } else {
+              nuevoElemento["PrecioGasolina95"] = elemento[key];
+            }
+
             break;
-          case "Precio Gasolina 98":
-            nuevoElemento["PrecioGasolina98"] = elemento[key];
+          case "Precio Gasolina 98 E5":
+            if (elemento[key] == "") {
+              nuevoElemento["PrecioGasolina98"] = "No disponible";
+            } else {
+              nuevoElemento["PrecioGasolina98"] = elemento[key];
+            }
             break;
           default:
             nuevoElemento[key] = elemento[key];
             break;
         }
-        createGasCard(nuevoElemento);
+
       }
+      createGasCard(nuevoElemento);
+      console.log(nuevoElemento)
     });
   }
 })
 
 function createGasCard(elemento) {
-  console.log(elemento);
   let generado = ""
   generado += `
 		<div class="carta" id="carta">
