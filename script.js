@@ -4,55 +4,59 @@ let arrayAPI = [];
 let locationList;
 let ccaaList;
 let munGasList = [];
+let generador = "";
 getLocationList();
 getCCAAList();
-buscar.addEventListener("keydown", (event) => {
-  if (event.key == "Enter") {
-    let locationID = locationList.find(element => element.Municipio == buscar.value).IDMunicipio;
+buscar.addEventListener("keyup", (event) => {
+  let locationID = locationList.find(element => element.Municipio == buscar.value).IDMunicipio;
+  getDataAPI(locationID);
+  for (let index = 0; index < munGasList.length; index++) {
+    let elemento = munGasList[index];
+    let nuevoElemento = {}
+    for (let key in elemento) {
+      switch (key) {
+        case "Precio Gasoleo A":
 
-    getDataAPI(locationID);
-    munGasList.forEach(elemento => {
-      let nuevoElemento = {}
-      for (let key in elemento) {
-        switch (key) {
-          case "Precio Gasoleo A":
+          if (elemento[key] == "") {
+            nuevoElemento["PrecioGasoleoA"] = "No disponible";
+          } else {
+            nuevoElemento["PrecioGasoleoA"] = elemento[key];
+          }
+          break;
+        case "Precio Gasolina 95 E5":
+          if (elemento[key] == "") {
+            nuevoElemento["PrecioGasolina95"] = "No disponible";
+          } else {
+            nuevoElemento["PrecioGasolina95"] = elemento[key];
+          }
 
-            if (elemento[key] == "") {
-              nuevoElemento["PrecioGasoleoA"] = "No disponible";
-            } else {
-              nuevoElemento["PrecioGasoleoA"] = elemento[key];
-            }
-            break;
-          case "Precio Gasolina 95 E5":
-            if (elemento[key] == "") {
-              nuevoElemento["PrecioGasolina95"] = "No disponible";
-            } else {
-              nuevoElemento["PrecioGasolina95"] = elemento[key];
-            }
-
-            break;
-          case "Precio Gasolina 98 E5":
-            if (elemento[key] == "") {
-              nuevoElemento["PrecioGasolina98"] = "No disponible";
-            } else {
-              nuevoElemento["PrecioGasolina98"] = elemento[key];
-            }
-            break;
-          default:
-            nuevoElemento[key] = elemento[key];
-            break;
-        }
-
+          break;
+        case "Precio Gasolina 98 E5":
+          if (elemento[key] == "") {
+            nuevoElemento["PrecioGasolina98"] = "No disponible";
+          } else {
+            nuevoElemento["PrecioGasolina98"] = elemento[key];
+          }
+          break;
+        default:
+          nuevoElemento[key] = elemento[key];
+          break;
       }
-      createGasCard(nuevoElemento);
-      console.log(nuevoElemento)
-    });
+
+    }
+    createGasCard(nuevoElemento);
+    if (munGasList.length - 1 == index) {
+      generador = "";
+    }
+
+
   }
-})
+
+});
 
 function createGasCard(elemento) {
-  let generado = ""
-  generado += `
+  console.log(generador)
+  generador += `
 		<div class="carta" id="carta">
 				<p><i>-Municipio: </i>${elemento.Municipio}</p>
         <p><i>-Diesel: </i>${elemento.PrecioGasoleoA}</p>
@@ -60,7 +64,8 @@ function createGasCard(elemento) {
         <p><i>-Gasolina 98: </i>${elemento.PrecioGasolina98}</p>
 		</div>
 		`
-  document.getElementById("contenedorResultados").innerHTML = generado
+  document.getElementById("contenedorResultados").innerHTML = generador;
+  console.log(generador)
 }
 
 
