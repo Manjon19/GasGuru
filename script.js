@@ -51,21 +51,27 @@ buscar.addEventListener("keyup", (event) => {
 
 
   }
+  console.log(munGasList)
 
 });
 
+
 function createGasCard(elemento) {
-  console.log(generador)
+  //console.log(generador)
   generador += `
 		<div class="carta" id="carta">
-				<p><i>-Municipio: </i>${elemento.Municipio}</p>
-        <p><i>-Diesel: </i>${elemento.PrecioGasoleoA}</p>
-        <p><i>-Gasolina 95: </i>${elemento.PrecioGasolina95}</p>
-        <p><i>-Gasolina 98: </i>${elemento.PrecioGasolina98}</p>
+				<p class="cardTitle">${elemento.Rótulo}</p>
+        <p><i>-Precio Diesel: </i>${elemento.PrecioGasoleoA}</p>
+        <p><i>-Precio Gasolina 95: </i>${elemento.PrecioGasolina95}€</p>
+        <p><i>-Precio Gasolina 98: </i>${elemento.PrecioGasolina98}€</p>
+        <p><i>-Horario: </i>${elemento.Horario}</p>
+        <p><i>-Dirección: </i>${elemento.Dirección}</p>
+        <p><i>-Municipio: </i>${elemento.Municipio}</p>
+
 		</div>
 		`
   document.getElementById("contenedorResultados").innerHTML = generador;
-  console.log(generador)
+  //console.log(generador)
 }
 
 
@@ -86,7 +92,7 @@ async function getCCAAList() {
 async function getCAMun(ccaaID) {
   await fetch("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/" + ccaaID).then(response => response.json()).then(
     data => {
-      console.log(data);
+      //console.log(data);
     }
   )
 }

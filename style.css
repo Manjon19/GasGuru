@@ -7,15 +7,58 @@ header {
   background-color: #22cbff;
 }
 
+body{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .logo {
   height: 100px;
   width: 125px;
 }
 
-.footer {
-	background-color:#36c7d1;
-	height: 50%;
+#buscar{
+  margin: 0 auto;
+  display: block;
+  width: 20%;
+  margin-top: 2%;
+}
+
+#contenedorResultados{
+  display: flex;
+  gap: 20px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2%;
+  margin-bottom: 10%;
+
+}
+
+.cardTitle{
+  text-align: center;
+  font-weight: bold;
+}
+
+.carta{
+  background-color: gray;
+  border-radius: 12px;
+  padding: 1%;
+  width: 250px;                       /* Estilo no definitivo */
+  box-shadow: 7px 7px 5px 0px rgba(0,0,0,0.75);
+  transition: transform 0.5s;
+}
+
+.carta:hover{
+  transform: translateY(-8px);
+}
+
+footer {
+	background-color:#22cbff;        
   padding: 15px;
+  width: 100%;
+  margin-top: auto;
 }
 
 .redes{
