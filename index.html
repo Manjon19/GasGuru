@@ -33,6 +33,12 @@
   </header>
   <main>
     <input type="search" id="buscar">
+      <select name="gasFilter" id="gasFilter" onchange="gasFilter()">
+        <option value="">--Seleccionar--</option>
+        <option value="diesel">Diesel</option>
+        <option value="gasolina95">Gasolina 95</option>
+        <option value="gasolina98">Gasolina 98</option>
+      </select>
     <div id="contenedorResultados"></div>
     <!-- Página que irá cambiando según se hagan consultas-->
   </main>

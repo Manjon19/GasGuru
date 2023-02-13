@@ -75,6 +75,33 @@ function createGasCard(elemento) {
 }
 
 
+//funcion en la que filtraremos las cartas en funcion de lo que seleccionemos
+function gasFilter(elemento){
+  
+  let filteredData = elemento.filter(function(elemento) {
+    return elemento.PrecioGasolina98 != null;
+  });
+  
+  console.log(filteredData);
+
+
+
+ /*  let filteredData = [];
+  for (let i = 0; i < munGasList.length; i++) {
+    if (gasFilter.value === gasolina98) {
+      if(munGasList[i].PrecioGasolina98 == null){
+        console.log("no gas 98")
+      };
+    }
+  }
+
+  //console.log(munGasList)
+  console.log(gasFilter.value) */
+  
+
+}
+
+
 async function getLocationList() {
   await fetch("./JSONS/Municipios.json")
     .then(response => response.json())
