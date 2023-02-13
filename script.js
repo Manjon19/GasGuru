@@ -25,27 +25,34 @@ async function position(pos) {
 
 getLocationList();
 getCCAAList();
-buscar.addEventListener("keyup", (event) => {
-  let locationID = locationList.find(element => element.Municipio == buscar.value).IDMunicipio;
+
+buscar.addEventListener("keyup", (e) => {
+  let locationID = locationList.find(
+    (element) => element.Municipio.toLowerCase() == buscar.value.toLowerCase()
+  ).IDMunicipio;
   getDataAPI(locationID);
-  for (let index = 0; index < munGasList.length; index++) {
-    let elemento = munGasList[index];
-    let nuevoElemento = {}
+  let filteredList = munGasList.filter((elemento) => {
+    return elemento.Municipio.toLowerCase().includes(
+      buscar.value.toLowerCase()
+    );
+  });
+  for (let index = 0; index < filteredList.length; index++) {
+    let elemento = filteredList[index];
+    let nuevoElemento = {};
     for (let key in elemento) {
       switch (key) {
         case "Precio Gasoleo A":
-
           if (elemento[key] == "") {
             nuevoElemento["PrecioGasoleoA"] = "No disponible";
           } else {
-            nuevoElemento["PrecioGasoleoA"] = elemento[key];
+            nuevoElemento["PrecioGasoleoA"] = elemento[key] + "€";
           }
           break;
         case "Precio Gasolina 95 E5":
           if (elemento[key] == "") {
             nuevoElemento["PrecioGasolina95"] = "No disponible";
           } else {
-            nuevoElemento["PrecioGasolina95"] = elemento[key];
+            nuevoElemento["PrecioGasolina95"] = elemento[key] + "€";
           }
 
           break;
@@ -53,66 +60,71 @@ buscar.addEventListener("keyup", (event) => {
           if (elemento[key] == "") {
             nuevoElemento["PrecioGasolina98"] = "No disponible";
           } else {
-            nuevoElemento["PrecioGasolina98"] = elemento[key];
+            nuevoElemento["PrecioGasolina98"] = elemento[key] + "€";
           }
           break;
         default:
           nuevoElemento[key] = elemento[key];
           break;
       }
-
     }
     createGasCard(nuevoElemento);
-    if (munGasList.length - 1 == index) {
+    if (filteredList.length - 1 == index) {
       generador = "";
     }
-
-
   }
-
+  console.log(munGasList);
 });
 
 function createGasCard(elemento) {
-  console.log(generador)
+  //console.log(generador)
   generador += `
 		<div class="carta" id="carta">
-				<p><i>-Municipio: </i>${elemento.Municipio}</p>
-        <p><i>-Diesel: </i>${elemento.PrecioGasoleoA}</p>
-        <p><i>-Gasolina 95: </i>${elemento.PrecioGasolina95}</p>
-        <p><i>-Gasolina 98: </i>${elemento.PrecioGasolina98}</p>
-		</div>
-		`
-  document.getElementById("contenedorResultados").innerHTML = generador;
-  console.log(generador)
-}
+				<p class="cardTitle">${elemento.Rótulo}</p>
+        <p><img src="./img/diesel.png" alt="Diesel"> Diesel: ${elemento.PrecioGasoleoA}</p>
+        <p><img src="./img/95.png" alt="Diesel"> Gasolina 95: ${elemento.PrecioGasolina95}</p>
+        <p><img src="./img/98.png" alt="Diesel"> Gasolina 98: ${elemento.PrecioGasolina98}</p>
+        <p><img src="./img/horario.png" alt="Diesel"> ${elemento.Horario}</p>
+        <p><img src="./img/direccion.png" alt="Diesel"> ${elemento.Dirección}</p>
+        <p><img src="./img/municipio.png" alt="Diesel"> ${elemento.Municipio}</p>
 
+		</div>
+		`;
+  document.getElementById("contenedorResultados").innerHTML = generador;
+  //console.log(generador)
+}
 
 async function getLocationList() {
   await fetch("./JSONS/Municipios.json")
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       locationList = data;
-    })
+    });
 }
 async function getCCAAList() {
   await fetch("./JSONS/CCAA.json")
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       ccaaList = data;
-    })
+    });
 }
 async function getCAMun(ccaaID) {
-  await fetch("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/" + ccaaID).then(response => response.json()).then(
-    data => {
-      console.log(data);
-    }
+  await fetch(
+    "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/" +
+      ccaaID
   )
+    .then((response) => response.json())
+    .then((data) => {
+      //console.log(data);
+    });
 }
 async function getDataAPI(locationId) {
-  await fetch("https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/" + locationId)
-    .then(response => response.json()).then(
-      data => {
-        munGasList = data.ListaEESSPrecio;
-      }
-    )
+  await fetch(
+    "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/" +
+      locationId
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      munGasList = data.ListaEESSPrecio;
+    });
 }

@@ -1,10 +1,17 @@
 * {
   padding: 0;
   margin: 0;
+  font-family: "Ubuntu", sans-serif;
 }
 
 header {
   background-color: #22cbff;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .logo {
@@ -19,8 +26,56 @@ header {
 	height: 50%;
   padding: 15px;
 }
+#buscar {
+  margin: 0 auto;
+  display: block;
+  width: 20%;
+  margin-top: 2%;
+}
 
-.redes{
+#contenedorResultados {
+  display: flex;
+  gap: 20px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2%;
+  margin-bottom: 10%;
+}
+
+.cardTitle {
+  text-align: center;
+  font-size: 120%;
+}
+
+.carta {
+  background-color: rgb(245, 245, 245);
+  width: 290px;
+  height: 400px;
+  box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5%;
+  transition: transform 0.5s;
+}
+
+.carta:hover {
+  transform: translateY(-8px);
+}
+
+footer {
+  background-color: #22cbff;
+  padding: 15px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.redes {
   width: 40px;
   height: 40px;
 }
