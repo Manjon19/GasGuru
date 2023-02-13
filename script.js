@@ -5,6 +5,23 @@ let locationList;
 let ccaaList;
 let munGasList = [];
 let generador = "";
+let lat = "";
+let lon = "";
+GeoLocation();
+
+function GeoLocation() {
+  if (navigator.geolocation) {
+    let geo = navigator.geolocation.getCurrentPosition(position);
+    setTimeout(() => { console.log(lat); }, 200)
+  }
+}
+
+async function position(pos) {
+  const crd = pos.coords;
+  lat = crd.latitude;
+  lon = crd.longitude;
+  console.log(lat)
+}
 
 getLocationList();
 getCCAAList();
