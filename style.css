@@ -13,6 +13,8 @@ header {
 }
 
 .footer {
+  position: fixed;
+  bottom: 0;
 	background-color:#36c7d1;
 	height: 50%;
   padding: 15px;
