@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -52,7 +52,13 @@
       <!-- Cabecero con imagen nombre (se queda fija en la página)-->
     </header>
     <main>
-      <input type="text" id="buscar" placeholder="Buscar por municipio..." />
+      <div class="search-container">
+        <input type="text" id="buscar" placeholder="Buscar por municipio..." />
+        <button id="buscarButton">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+
       <select name="gasFilter" id="gasFilter" onchange="gasFilter()">
         <option value="">--Seleccionar--</option>
         <option value="diesel">Diesel</option>
