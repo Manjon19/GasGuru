@@ -28,16 +28,17 @@ async function position(pos) {
 getLocationList();
 getCCAAList();
 
-buscar.addEventListener("keyup", (e) => {
+buscar.addEventListener("keyup", (event) => {
   let locationID = locationList.find(
     (element) => element.Municipio.toLowerCase() == buscar.value.toLowerCase()
   ).IDMunicipio;
   getDataAPI(locationID);
   let filteredList = munGasList.filter((elemento) => {
-    return elemento.Municipio.toLowerCase().includes(
+    return elemento.Municipio.toLowerCase().startsWith(
       buscar.value.toLowerCase()
     );
   });
+
   for (let index = 0; index < filteredList.length; index++) {
     let elemento = filteredList[index];
     let nuevoElemento = {};
@@ -45,14 +46,14 @@ buscar.addEventListener("keyup", (e) => {
       switch (key) {
         case "Precio Gasoleo A":
           if (elemento[key] == "") {
-            nuevoElemento["PrecioGasoleoA"] = "No disponible";
+            nuevoElemento["PrecioGasoleoA"] = "N/A";
           } else {
             nuevoElemento["PrecioGasoleoA"] = elemento[key] + "€";
           }
           break;
         case "Precio Gasolina 95 E5":
           if (elemento[key] == "") {
-            nuevoElemento["PrecioGasolina95"] = "No disponible";
+            nuevoElemento["PrecioGasolina95"] = "N/A";
           } else {
             nuevoElemento["PrecioGasolina95"] = elemento[key] + "€";
           }
@@ -60,7 +61,7 @@ buscar.addEventListener("keyup", (e) => {
           break;
         case "Precio Gasolina 98 E5":
           if (elemento[key] == "") {
-            nuevoElemento["PrecioGasolina98"] = "No disponible";
+            nuevoElemento["PrecioGasolina98"] = "N/A";
           } else {
             nuevoElemento["PrecioGasolina98"] = elemento[key] + "€";
           }
@@ -82,13 +83,29 @@ function createGasCard(elemento) {
   //console.log(generador)
   generador += `
 		<div class="carta" id="carta">
+    <div class="stat-title">
 				<p class="cardTitle">${elemento.Rótulo}</p>
-        <p><img src="./img/diesel.png" alt="Diesel"> Diesel: ${elemento.PrecioGasoleoA}</p>
-        <p><img src="./img/95.png" alt="Diesel"> Gasolina 95: ${elemento.PrecioGasolina95}</p>
-        <p><img src="./img/98.png" alt="Diesel"> Gasolina 98: ${elemento.PrecioGasolina98}</p>
-        <p><img src="./img/horario.png" alt="Diesel"> ${elemento.Horario}</p>
-        <p><img src="./img/direccion.png" alt="Diesel"> ${elemento.Dirección}</p>
-        <p><img src="./img/municipio.png" alt="Diesel"> ${elemento.Municipio}</p>
+    </div>
+        <p><img src="./img/horario.png" alt="Horario"> ${elemento.Horario}</p>
+        <p><img src="./img/direccion.png" alt="Direccion"> ${elemento.Dirección}</p>
+        <p><img src="./img/municipio.png" alt="Municipio" id="imgMunicipio"> ${elemento.Municipio}</p>
+
+        <div class="card-footer">
+          <div class="stats">
+              <div class="stat">
+                <span class="label">diesel</span>
+                <p class="value">${elemento.PrecioGasoleoA}</p>
+              </div>
+              <div class="stat">
+                <span class="label">gas 95</span>
+                <p class="value">${elemento.PrecioGasolina95}</p>
+              </div>
+              <div class="stat">
+                <span class="label">gas 98</span>
+                <p class="value">${elemento.PrecioGasolina98}</p>
+              </div>
+          </div>
+        </div>
 
 		</div>
 		`;

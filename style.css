@@ -38,7 +38,10 @@ body {
 
 .cardTitle {
   text-align: center;
-  font-size: 120%;
+  display: block;
+  font-weight: 700;
+  font-size: 20px;
+  margin-top: 5px;
 }
 
 .carta {
@@ -61,7 +64,48 @@ body {
   transform: translateY(-8px);
 }
 
+.card-footer {
+  left: 0;
+  width: 100%;
+  bottom: 20px;
+}
+
+.stat-title {
+  text-align: center;
+  border-bottom: 1px solid #000000;
+}
+
+.stat {
+  box-sizing: border-box;
+  width: calc(100% / 3);
+  float: left;
+  text-align: center;
+  border-left: 1px solid #ebebeb;
+}
+
+.stat .label {
+  display: block;
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #95989a;
+}
+
+.stat .value {
+  display: block;
+  font-weight: 700;
+  font-size: 20px;
+  margin-top: 5px;
+}
+
+#imgMunicipio {
+  width: 30%;
+}
+
 footer {
+  display: flex;
+  justify-content: space-between;
   background-color: #22cbff;
   padding: 15px;
   width: 100%;
