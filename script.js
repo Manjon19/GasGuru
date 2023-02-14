@@ -7,6 +7,7 @@ let munGasList = [];
 let generador = "";
 let lat = "";
 let lon = "";
+let munGasListTrad = [];
 GeoLocation();
 
 function GeoLocation() {
@@ -72,6 +73,7 @@ buscar.addEventListener("keyup", (event) => {
       }
     }
     createGasCard(nuevoElemento);
+    munGasListTrad.push(nuevoElemento);
     if (filteredList.length - 1 == index) {
       generador = "";
     }
@@ -111,6 +113,33 @@ function createGasCard(elemento) {
 		`;
   document.getElementById("contenedorResultados").innerHTML = generador;
   //console.log(generador)
+}
+
+//funcion en la que filtraremos las cartas en funcion de lo que seleccionemos
+function gasFilter(){
+  let carta = document.getElementsByClassName("carta")
+  let gasFilter = document.getElementById("gasFilter")
+
+  for (let i = 0; i < munGasListTrad.length; i++) {
+    carta[i].style.display="flex"
+    if (gasFilter.value == "diesel") {
+      if(munGasListTrad[i].PrecioGasoleoA == "N/A" ){
+          carta[i].style.display="none"
+      };
+    }
+
+    if (gasFilter.value == "gasolina95") {
+      if(munGasListTrad[i].PrecioGasolina95 == "N/A" ){
+          carta[i].style.display="none"
+      };
+    }
+
+    if (gasFilter.value == "gasolina98") {
+      if(munGasListTrad[i].PrecioGasolina98 == "N/A" ){
+          carta[i].style.display="none"
+      };
+    }
+  }
 }
 
 async function getLocationList() {
