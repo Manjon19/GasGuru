@@ -100,15 +100,13 @@ body {
 }
 
 #imgMunicipio {
-  width: 30%;
+  width: 30px;
 }
 
 footer {
-  display: flex;
-  justify-content: space-between;
   background-color: #22cbff;
-  padding: 15px;
-  width: 100%;
+  text-align: center;
+  color: white;
   margin-top: auto;
 }
 
