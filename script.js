@@ -12,7 +12,9 @@ GeoLocation();
 function GeoLocation() {
   if (navigator.geolocation) {
     let geo = navigator.geolocation.getCurrentPosition(position);
-    setTimeout(() => { console.log(lat); }, 200)
+    setTimeout(() => {
+      console.log(lat);
+    }, 200);
   }
 }
 
@@ -20,7 +22,7 @@ async function position(pos) {
   const crd = pos.coords;
   lat = crd.latitude;
   lon = crd.longitude;
-  console.log(lat)
+  console.log(lat);
 }
 
 getLocationList();
@@ -93,34 +95,6 @@ function createGasCard(elemento) {
   document.getElementById("contenedorResultados").innerHTML = generador;
   //console.log(generador)
 }
-
-
-//funcion en la que filtraremos las cartas en funcion de lo que seleccionemos
-function gasFilter(elemento){
-  
-  let filteredData = elemento.filter(function(elemento) {
-    return elemento.PrecioGasolina98 != null;
-  });
-  
-  console.log(filteredData);
-
-
-
- /*  let filteredData = [];
-  for (let i = 0; i < munGasList.length; i++) {
-    if (gasFilter.value === gasolina98) {
-      if(munGasList[i].PrecioGasolina98 == null){
-        console.log("no gas 98")
-      };
-    }
-  }
-
-  //console.log(munGasList)
-  console.log(gasFilter.value) */
-  
-
-}
-
 
 async function getLocationList() {
   await fetch("./JSONS/Municipios.json")
