@@ -1,7 +1,7 @@
 const buscar = document.getElementById("buscar");
 const ca = document.getElementById("CCAA");
-const btn_loc=document.getElementById("location");
-btn_loc.addEventListener("click",geoLocalizacion);
+const btn_loc = document.getElementById("location");
+btn_loc.addEventListener("click", geoLocalizacion);
 let arrayAPI = [];
 let locationList;
 let ccaaList;
@@ -10,17 +10,17 @@ let generador = "";
 let lat = "";
 let lon = "";
 let munGasListTrad = [];
-let closeGasList=[];
+let closeGasList = [];
 //Metodo de localizacion para obtener gasolineras cercanas.
 function geoLocalizacion() {
   if (navigator.geolocation) {
-     navigator.geolocation.getCurrentPosition( position);
+    navigator.geolocation.getCurrentPosition(position);
     setTimeout(() => {
-      nuevaCoordN=rastreator(lat,lon,0.5,"norte");
-      nuevaCoordS=rastreator(lat,lon,0.5,"sur");
-      nuevaCoordE=rastreator(lat,lon,0.5,"este");
-      nuevaCoordO=rastreator(lat,lon,0.5,"oeste");
-      getCloseGas(nuevaCoordS,nuevaCoordN,nuevaCoordE,nuevaCoordO)
+      nuevaCoordN = rastreator(lat, lon, 0.5, "norte");
+      nuevaCoordS = rastreator(lat, lon, 0.5, "sur");
+      nuevaCoordE = rastreator(lat, lon, 0.5, "este");
+      nuevaCoordO = rastreator(lat, lon, 0.5, "oeste");
+      getCloseGas(nuevaCoordS, nuevaCoordN, nuevaCoordE, nuevaCoordO);
     }, 1300);
   }
 }
@@ -32,21 +32,21 @@ function rastreator(lat, long, distance, direction) {
   let newLat, newLong;
 
   switch (direction) {
-    case 'norte':
+    case "norte":
       newLat = lat + distanceDegs;
       newLong = long;
       break;
-    case 'sur':
+    case "sur":
       newLat = lat - distanceDegs;
       newLong = long;
       break;
-    case 'este':
+    case "este":
       newLat = lat;
-      newLong = long + (distanceDegs / Math.cos(latRads));
+      newLong = long + distanceDegs / Math.cos(latRads);
       break;
-    case 'oeste':
+    case "oeste":
       newLat = lat;
-      newLong = long - (distanceDegs / Math.cos(latRads));
+      newLong = long - distanceDegs / Math.cos(latRads);
       break;
     default:
       return null;
@@ -227,18 +227,20 @@ async function getDataAPI(locationId) {
       munGasList = data.ListaEESSPrecio;
     });
 }
-async function getCloseGas(nuevaCoordS,nuevaCoordN,nuevaCoordE,nuevaCoordO){
-  await fetch("./JSONS/Gasolineras.json").then((response)=>response.json())
-  .then((data)=>{
-    
-    for (let index = 0; index < data.length; index++) {
-      const element = data[index];
-      if (nuevaCoordN["latitud"]>element["Latitud"]) {
-        console.log("hola")
-        if (nuevaCoordN>element["Latitud"]&&nuevaCoordN<element["Latitud"]) {
-          
+async function getCloseGas(nuevaCoordS, nuevaCoordN, nuevaCoordE, nuevaCoordO) {
+  await fetch("./JSONS/Gasolineras.json")
+    .then((response) => response.json())
+    .then((data) => {
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        if (nuevaCoordN["latitud"] > element["Latitud"]) {
+          console.log("hola");
+          if (
+            nuevaCoordN > element["Latitud"] &&
+            nuevaCoordN < element["Latitud"]
+          ) {
+          }
         }
-        
       }
-    }})
+    });
 }

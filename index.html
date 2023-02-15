@@ -39,13 +39,44 @@
     <header>
       <div class="container mt-3 mb-2">
         <div class="row">
-          <div class="d-flex align-items-center">
-            <img
-              src="./img/logos/logo-gas-guru-no-letras.png"
-              alt="Logo GasGurú"
-              class="mr-3 logo"
-            />
-            <h1 class="text-center">GasGurú</h1>
+          <div
+            class="d-flex flex-wrap align-items-center justify-content-between"
+          >
+            <div class="d-flex align-items-center">
+              <img
+                src="./img/logos/logo-gas-guru-no-letras.png"
+                alt="Logo GasGurú"
+                class="mr-3 logo"
+              />
+
+              <h1 class="text-center header-title">GasGurú</h1>
+            </div>
+
+            <div class="search-container">
+              <input
+                type="text"
+                id="buscar"
+                placeholder="Buscar por municipio..."
+              />
+              <button id="buscarButton">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+
+            <div>
+              <select name="gasFilter" id="gasFilter" onchange="gasFilter()">
+                <option value="">Seleccionar combustible...</option>
+                <option value="diesel">Diesel</option>
+                <option value="gasolina95">Gasolina 95</option>
+                <option value="gasolina98">Gasolina 98</option>
+              </select>
+            </div>
+
+            <div>
+              <button id="location">
+                <i class="fa fa-map-marker"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -53,20 +84,6 @@
     </header>
     <!-- Implementar un menu? -->
     <main>
-      <div class="search-container">
-        <input type="text" id="buscar" placeholder="Buscar por municipio..." />
-        <button id="buscarButton">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </div>
-
-      <select name="gasFilter" id="gasFilter" onchange="gasFilter()">
-        <option value="">--Seleccionar--</option>
-        <option value="diesel">Diesel</option>
-        <option value="gasolina95">Gasolina 95</option>
-        <option value="gasolina98">Gasolina 98</option>
-      </select>
-      <button class="btn btn-primary" id="location">Localízame</button>
       <div id="contenedorResultados"></div>
       <!-- Página que irá cambiando según se hagan consultas-->
     </main>
