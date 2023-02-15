@@ -193,6 +193,36 @@ function gasFilter() {
   }
 }
 
+function orderByCheap() {
+  let cheapFilter = document.getElementById("cheapFilter");
+  const listaGasolineras = munGasListTrad;
+
+  if (cheapFilter.value == "diesel") {
+    listaGasolineras.sort((precio1, precio2) => comparation(precio1.PrecioGasoleoA, precio2.PrecioGasoleoA));
+  }
+  if (cheapFilter.value == "gasolina95") {
+    listaGasolineras.sort((precio1, precio2) => comparation(precio1.PrecioGasolina95, precio2.PrecioGasolina95));
+  }
+  if (cheapFilter.value == "gasolina98") {
+    listaGasolineras.sort((precio1, precio2) => comparation(precio1.PrecioGasolina98, precio2.PrecioGasolina98));
+  }
+
+  listaGasolineras.forEach(gasolinera => {
+    createGasCard(gasolinera);
+  });
+}
+
+function comparation(a, b) {
+  //metodo hecho para ordenar parametros
+  if (b < a) {
+    return 1;
+  } else if (a < b) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
 async function getLocationList() {
   await fetch("./JSONS/Municipios.json")
     .then((response) => response.json())
