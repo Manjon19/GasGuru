@@ -1,5 +1,7 @@
 const buscar = document.getElementById("buscar");
 const ca = document.getElementById("CCAA");
+const btn_loc=document.getElementById("location");
+btn_loc.addEventListener("click",geoLocalizacion);
 let arrayAPI = [];
 let locationList;
 let ccaaList;
@@ -8,22 +10,56 @@ let generador = "";
 let lat = "";
 let lon = "";
 let munGasListTrad = [];
-GeoLocation();
-
-function GeoLocation() {
+let closeGasList=[];
+//Metodo de localizacion para obtener gasolineras cercanas.
+function geoLocalizacion() {
   if (navigator.geolocation) {
-    let geo = navigator.geolocation.getCurrentPosition(position);
+     navigator.geolocation.getCurrentPosition( position);
     setTimeout(() => {
-      console.log(lat);
-    }, 200);
+      nuevaCoordN=rastreator(lat,lon,0.5,"norte");
+      nuevaCoordS=rastreator(lat,lon,0.5,"sur");
+      nuevaCoordE=rastreator(lat,lon,0.5,"este");
+      nuevaCoordO=rastreator(lat,lon,0.5,"oeste");
+      getCloseGas(nuevaCoordS,nuevaCoordN,nuevaCoordE,nuevaCoordO)
+    }, 1300);
   }
 }
+function rastreator(lat, long, distance, direction) {
+  const earthRadius = 6371; // Radio de la Tierra en kilómetros
+  const latRads = (lat * Math.PI) / 180; // Convertir latitud a radianes
+  const longRads = (long * Math.PI) / 180; // Convertir longitud a radianes
+  const distanceDegs = (distance / earthRadius) * (180 / Math.PI); // Convertir distancia en km a grados
+  let newLat, newLong;
 
+  switch (direction) {
+    case 'norte':
+      newLat = lat + distanceDegs;
+      newLong = long;
+      break;
+    case 'sur':
+      newLat = lat - distanceDegs;
+      newLong = long;
+      break;
+    case 'este':
+      newLat = lat;
+      newLong = long + (distanceDegs / Math.cos(latRads));
+      break;
+    case 'oeste':
+      newLat = lat;
+      newLong = long - (distanceDegs / Math.cos(latRads));
+      break;
+    default:
+      return null;
+  }
+
+  const newLatDeg = (newLat * 180) / Math.PI; // Convertir nueva latitud a grados
+  const newLongDeg = (newLong * 180) / Math.PI; // Convertir nueva longitud a grados
+  return { latitud: newLatDeg, longitud: newLongDeg };
+}
 async function position(pos) {
   const crd = pos.coords;
   lat = crd.latitude;
   lon = crd.longitude;
-  console.log(lat);
 }
 
 getLocationList();
@@ -132,26 +168,26 @@ function createGasCard(elemento) {
 
 //funcion en la que filtraremos las cartas en funcion de lo que seleccionemos
 function gasFilter() {
-  let carta = document.getElementsByClassName("carta");
+  let cards = document.getElementsByClassName("carta");
   let gasFilter = document.getElementById("gasFilter");
 
   for (let i = 0; i < munGasListTrad.length; i++) {
-    carta[i].style.display = "flex";
+    cards[i].style.display = "flex";
     if (gasFilter.value == "diesel") {
       if (munGasListTrad[i].PrecioGasoleoA == "N/A") {
-        carta[i].style.display = "none";
+        cards[i].style.display = "none";
       }
     }
 
     if (gasFilter.value == "gasolina95") {
       if (munGasListTrad[i].PrecioGasolina95 == "N/A") {
-        carta[i].style.display = "none";
+        cards[i].style.display = "none";
       }
     }
 
     if (gasFilter.value == "gasolina98") {
       if (munGasListTrad[i].PrecioGasolina98 == "N/A") {
-        carta[i].style.display = "none";
+        cards[i].style.display = "none";
       }
     }
   }
@@ -190,4 +226,19 @@ async function getDataAPI(locationId) {
     .then((data) => {
       munGasList = data.ListaEESSPrecio;
     });
+}
+async function getCloseGas(nuevaCoordS,nuevaCoordN,nuevaCoordE,nuevaCoordO){
+  await fetch("./JSONS/Gasolineras.json").then((response)=>response.json())
+  .then((data)=>{
+    
+    for (let index = 0; index < data.length; index++) {
+      const element = data[index];
+      if (nuevaCoordN["latitud"]>element["Latitud"]) {
+        console.log("hola")
+        if (nuevaCoordN>element["Latitud"]&&nuevaCoordN<element["Latitud"]) {
+          
+        }
+        
+      }
+    }})
 }
