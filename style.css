@@ -30,7 +30,8 @@ body {
   justify-content: center;
 }
 
-#gasFilter {
+#gasFilter,
+#cheapFilter {
   display: grid;
   grid-template-areas: "select";
   align-items: center;

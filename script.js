@@ -68,27 +68,19 @@ async function position(pos) {
 getLocationList();
 getCCAAList();
 
-document
-  .getElementById("buscarButton")
-  .addEventListener("click", async (event) => {
-    event.preventDefault();
-    if (
-      locationList.find(
-        (element) =>
-          element.Municipio.toLowerCase() == buscar.value.toLowerCase()
-      )
-    ) {
-      let locationID = locationList.find(
-        (element) =>
-          element.Municipio.toLowerCase() == buscar.value.toLowerCase()
-      ).IDMunicipio;
+async function busqueda() {
+  munGasListTrad = [];
+  if (locationList.find((element) => element.Municipio.toLowerCase() == buscar.value.toLowerCase())) {
+    let locationID = locationList.find(
+      (element) => element.Municipio.toLowerCase() == buscar.value.toLowerCase()
+    ).IDMunicipio;
 
-      await getDataAPI(locationID);
-      let filteredList = munGasList.filter((elemento) => {
-        return elemento.Municipio.toLowerCase().startsWith(
-          buscar.value.toLowerCase()
-        );
-      });
+    await getDataAPI(locationID);
+    let filteredList = munGasList.filter((elemento) => {
+      return elemento.Municipio.toLowerCase().startsWith(
+        buscar.value.toLowerCase()
+      );
+    });
 
       for (let index = 0; index < filteredList.length; index++) {
         let elemento = filteredList[index];
@@ -99,12 +91,16 @@ document
           generador = "";
         }
       }
-      console.log(munGasList);
-    } else {
-      document.getElementById("contenedorResultados").innerHTML =
-        "Municipio no encontrado";
-    }
-  });
+      createGasCard(nuevoElemento);
+      munGasListTrad.push(nuevoElemento);
+      if (filteredList.length - 1 == index) {
+        generador = "";
+      }
+  } else {
+    document.getElementById("contenedorResultados").innerHTML =
+      "Municipio no encontrado";
+  }
+}
 
 function traductor(elemento) {
   let newElemento = {};
@@ -197,6 +193,42 @@ function gasFilter() {
         cards[i].style.display = "none";
       }
     }
+  }
+}
+
+function orderByCheap() {
+  let cheapFilter = document.getElementById("cheapFilter");
+  const listaGasolineras = munGasListTrad;
+
+  if (cheapFilter.value == "diesel") {
+    listaGasolineras.sort((precio1, precio2) =>
+      comparation(precio1.PrecioGasoleoA, precio2.PrecioGasoleoA)
+    );
+  }
+  if (cheapFilter.value == "gasolina95") {
+    listaGasolineras.sort((precio1, precio2) =>
+      comparation(precio1.PrecioGasolina95, precio2.PrecioGasolina95)
+    );
+  }
+  if (cheapFilter.value == "gasolina98") {
+    listaGasolineras.sort((precio1, precio2) =>
+      comparation(precio1.PrecioGasolina98, precio2.PrecioGasolina98)
+    );
+  }
+
+  listaGasolineras.forEach((gasolinera) => {
+    createGasCard(gasolinera);
+  });
+}
+
+function comparation(a, b) {
+  //metodo hecho para ordenar parametros
+  if (b < a) {
+    return 1;
+  } else if (a < b) {
+    return -1;
+  } else {
+    return 0;
   }
 }
 
