@@ -65,72 +65,68 @@ async function position(pos) {
 getLocationList();
 getCCAAList();
 
-document
-  .getElementById("buscarButton")
-  .addEventListener("click", async (event) => {
-    event.preventDefault();
-    if (
-      locationList.find(
-        (element) =>
-          element.Municipio.toLowerCase() == buscar.value.toLowerCase()
-      )
-    ) {
-      let locationID = locationList.find(
-        (element) =>
-          element.Municipio.toLowerCase() == buscar.value.toLowerCase()
-      ).IDMunicipio;
+async function busqueda() {
+  munGasListTrad = [];
+  if (
+    locationList.find(
+      (element) => element.Municipio.toLowerCase() == buscar.value.toLowerCase()
+    )
+  ) {
+    let locationID = locationList.find(
+      (element) => element.Municipio.toLowerCase() == buscar.value.toLowerCase()
+    ).IDMunicipio;
 
-      await getDataAPI(locationID);
-      let filteredList = munGasList.filter((elemento) => {
-        return elemento.Municipio.toLowerCase().startsWith(
-          buscar.value.toLowerCase()
-        );
-      });
+    await getDataAPI(locationID);
+    let filteredList = munGasList.filter((elemento) => {
+      return elemento.Municipio.toLowerCase().startsWith(
+        buscar.value.toLowerCase()
+      );
+    });
 
-      for (let index = 0; index < filteredList.length; index++) {
-        let elemento = filteredList[index];
-        let nuevoElemento = {};
-        for (let key in elemento) {
-          switch (key) {
-            case "Precio Gasoleo A":
-              if (elemento[key] == "") {
-                nuevoElemento["PrecioGasoleoA"] = "N/A";
-              } else {
-                nuevoElemento["PrecioGasoleoA"] = elemento[key] + "€";
-              }
-              break;
-            case "Precio Gasolina 95 E5":
-              if (elemento[key] == "") {
-                nuevoElemento["PrecioGasolina95"] = "N/A";
-              } else {
-                nuevoElemento["PrecioGasolina95"] = elemento[key] + "€";
-              }
+    for (let index = 0; index < filteredList.length; index++) {
+      let elemento = filteredList[index];
+      let nuevoElemento = {};
+      for (let key in elemento) {
+        switch (key) {
+          case "Precio Gasoleo A":
+            if (elemento[key] == "") {
+              nuevoElemento["PrecioGasoleoA"] = "N/A";
+            } else {
+              nuevoElemento["PrecioGasoleoA"] = elemento[key] + "€";
+            }
+            break;
+          case "Precio Gasolina 95 E5":
+            if (elemento[key] == "") {
+              nuevoElemento["PrecioGasolina95"] = "N/A";
+            } else {
+              nuevoElemento["PrecioGasolina95"] = elemento[key] + "€";
+            }
 
-              break;
-            case "Precio Gasolina 98 E5":
-              if (elemento[key] == "") {
-                nuevoElemento["PrecioGasolina98"] = "N/A";
-              } else {
-                nuevoElemento["PrecioGasolina98"] = elemento[key] + "€";
-              }
-              break;
-            default:
-              nuevoElemento[key] = elemento[key];
-              break;
-          }
-        }
-        createGasCard(nuevoElemento);
-        munGasListTrad.push(nuevoElemento);
-        if (filteredList.length - 1 == index) {
-          generador = "";
+            break;
+          case "Precio Gasolina 98 E5":
+            if (elemento[key] == "") {
+              nuevoElemento["PrecioGasolina98"] = "N/A";
+            } else {
+              nuevoElemento["PrecioGasolina98"] = elemento[key] + "€";
+            }
+            break;
+          default:
+            nuevoElemento[key] = elemento[key];
+            break;
         }
       }
-      console.log(munGasList);
-    } else {
-      document.getElementById("contenedorResultados").innerHTML =
-        "Municipio no encontrado";
+      createGasCard(nuevoElemento);
+      munGasListTrad.push(nuevoElemento);
+      if (filteredList.length - 1 == index) {
+        generador = "";
+      }
     }
-  });
+    console.log(munGasList);
+  } else {
+    document.getElementById("contenedorResultados").innerHTML =
+      "Municipio no encontrado";
+  }
+}
 
 function createGasCard(elemento) {
   //console.log(generador)
@@ -198,16 +194,22 @@ function orderByCheap() {
   const listaGasolineras = munGasListTrad;
 
   if (cheapFilter.value == "diesel") {
-    listaGasolineras.sort((precio1, precio2) => comparation(precio1.PrecioGasoleoA, precio2.PrecioGasoleoA));
+    listaGasolineras.sort((precio1, precio2) =>
+      comparation(precio1.PrecioGasoleoA, precio2.PrecioGasoleoA)
+    );
   }
   if (cheapFilter.value == "gasolina95") {
-    listaGasolineras.sort((precio1, precio2) => comparation(precio1.PrecioGasolina95, precio2.PrecioGasolina95));
+    listaGasolineras.sort((precio1, precio2) =>
+      comparation(precio1.PrecioGasolina95, precio2.PrecioGasolina95)
+    );
   }
   if (cheapFilter.value == "gasolina98") {
-    listaGasolineras.sort((precio1, precio2) => comparation(precio1.PrecioGasolina98, precio2.PrecioGasolina98));
+    listaGasolineras.sort((precio1, precio2) =>
+      comparation(precio1.PrecioGasolina98, precio2.PrecioGasolina98)
+    );
   }
 
-  listaGasolineras.forEach(gasolinera => {
+  listaGasolineras.forEach((gasolinera) => {
     createGasCard(gasolinera);
   });
 }
