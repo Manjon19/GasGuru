@@ -16,44 +16,47 @@ function geoLocalizacion() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position);
     setTimeout(() => {
-      nuevaCoordN = rastreator(lat, lon, 0.5, "norte");
-      nuevaCoordS = rastreator(lat, lon, 0.5, "sur");
-      nuevaCoordE = rastreator(lat, lon, 0.5, "este");
-      nuevaCoordO = rastreator(lat, lon, 0.5, "oeste");
+      nuevaCoordN = rastreator(lat, lon, 5, "norte");
+      nuevaCoordS = rastreator(lat, lon, 5, "sur");
+      nuevaCoordE = rastreator(lat, lon, 5, "este");
+      nuevaCoordO = rastreator(lat, lon, 5, "oeste");
       getCloseGas(nuevaCoordS, nuevaCoordN, nuevaCoordE, nuevaCoordO);
-    }, 1300);
+    }, 1000);
   }
 }
 function rastreator(lat, long, distance, direction) {
   const earthRadius = 6371; // Radio de la Tierra en kilómetros
   const latRads = (lat * Math.PI) / 180; // Convertir latitud a radianes
   const longRads = (long * Math.PI) / 180; // Convertir longitud a radianes
-  const distanceDegs = (distance / earthRadius) * (180 / Math.PI); // Convertir distancia en km a grados
-  let newLat, newLong;
+  const distanceKm = distance; // Distancia en kilómetros
 
+  // Convertir distancia en kilómetros a distancia en grados de latitud y longitud
+  const dLat = (distanceKm / earthRadius) * (180 / Math.PI);
+  const dLong = (distanceKm / earthRadius) * (180 / Math.PI) / Math.cos(latRads);
+
+  // Calcular nueva latitud y longitud en grados
+  let newLatDeg, newLongDeg;
   switch (direction) {
     case "norte":
-      newLat = lat + distanceDegs;
-      newLong = long;
+      newLatDeg = lat + dLat;
+      newLongDeg = long;
       break;
     case "sur":
-      newLat = lat - distanceDegs;
-      newLong = long;
+      newLatDeg = lat - dLat;
+      newLongDeg = long;
       break;
     case "este":
-      newLat = lat;
-      newLong = long + distanceDegs / Math.cos(latRads);
+      newLatDeg = lat;
+      newLongDeg = long + dLong;
       break;
     case "oeste":
-      newLat = lat;
-      newLong = long - distanceDegs / Math.cos(latRads);
+      newLatDeg = lat;
+      newLongDeg = long - dLong;
       break;
     default:
       return null;
   }
 
-  const newLatDeg = (newLat * 180) / Math.PI; // Convertir nueva latitud a grados
-  const newLongDeg = (newLong * 180) / Math.PI; // Convertir nueva longitud a grados
   return { latitud: newLatDeg, longitud: newLongDeg };
 }
 async function position(pos) {
@@ -89,36 +92,7 @@ document
 
       for (let index = 0; index < filteredList.length; index++) {
         let elemento = filteredList[index];
-        let nuevoElemento = {};
-        for (let key in elemento) {
-          switch (key) {
-            case "Precio Gasoleo A":
-              if (elemento[key] == "") {
-                nuevoElemento["PrecioGasoleoA"] = "N/A";
-              } else {
-                nuevoElemento["PrecioGasoleoA"] = elemento[key] + "€";
-              }
-              break;
-            case "Precio Gasolina 95 E5":
-              if (elemento[key] == "") {
-                nuevoElemento["PrecioGasolina95"] = "N/A";
-              } else {
-                nuevoElemento["PrecioGasolina95"] = elemento[key] + "€";
-              }
-
-              break;
-            case "Precio Gasolina 98 E5":
-              if (elemento[key] == "") {
-                nuevoElemento["PrecioGasolina98"] = "N/A";
-              } else {
-                nuevoElemento["PrecioGasolina98"] = elemento[key] + "€";
-              }
-              break;
-            default:
-              nuevoElemento[key] = elemento[key];
-              break;
-          }
-        }
+        let nuevoElemento = traductor(elemento);
         createGasCard(nuevoElemento);
         munGasListTrad.push(nuevoElemento);
         if (filteredList.length - 1 == index) {
@@ -132,6 +106,39 @@ document
     }
   });
 
+function traductor(elemento) {
+  let newElemento = {};
+  for (let key in elemento) {
+    switch (key) {
+      case "Precio Gasoleo A":
+        if (elemento[key] == "") {
+          newElemento["PrecioGasoleoA"] = "N/A";
+        } else {
+          newElemento["PrecioGasoleoA"] = elemento[key] + "€";
+        }
+        break;
+      case "Precio Gasolina 95 E5":
+        if (elemento[key] == "") {
+          newElemento["PrecioGasolina95"] = "N/A";
+        } else {
+          newElemento["PrecioGasolina95"] = elemento[key] + "€";
+        }
+
+        break;
+      case "Precio Gasolina 98 E5":
+        if (elemento[key] == "") {
+          newElemento["PrecioGasolina98"] = "N/A";
+        } else {
+          newElemento["PrecioGasolina98"] = elemento[key] + "€";
+        }
+        break;
+      default:
+        newElemento[key] = elemento[key];
+        break;
+    }
+  }
+  return newElemento;
+}
 function createGasCard(elemento) {
   //console.log(generador)
   generador += `
@@ -210,7 +217,7 @@ async function getCCAAList() {
 async function getCAMun(ccaaID) {
   await fetch(
     "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/" +
-      ccaaID
+    ccaaID
   )
     .then((response) => response.json())
     .then((data) => {
@@ -220,7 +227,7 @@ async function getCAMun(ccaaID) {
 async function getDataAPI(locationId) {
   await fetch(
     "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/" +
-      locationId
+    locationId
   )
     .then((response) => response.json())
     .then((data) => {
@@ -231,15 +238,23 @@ async function getCloseGas(nuevaCoordS, nuevaCoordN, nuevaCoordE, nuevaCoordO) {
   await fetch("./JSONS/Gasolineras.json")
     .then((response) => response.json())
     .then((data) => {
-      for (let index = 0; index < data.length; index++) {
-        const element = data[index];
-        if (nuevaCoordN["latitud"] > element["Latitud"]) {
-          console.log("hola");
-          if (
-            nuevaCoordN > element["Latitud"] &&
-            nuevaCoordN < element["Latitud"]
-          ) {
+      let filteredList = [];
+      for (let i = 0; i < data.length; i++) {
+        data[i]["Latitud"] = parseFloat(data[i]["Latitud"].replace(",", "."));
+        data[i]["Longitud (WGS84)"] = parseFloat(data[i]["Longitud (WGS84)"].replace(",", "."));
+        if (nuevaCoordN["latitud"] > data[i]["Latitud"] && nuevaCoordS["latitud"] < data[i]["Latitud"]) {
+          if (nuevaCoordE["longitud"] > data[i]["Longitud (WGS84)"] && nuevaCoordO["longitud"] < data[i]["Longitud (WGS84)"]) {
+            filteredList.push(traductor(data[i]));
+
           }
+        }
+      }
+      for (let index = 0; index < filteredList.length; index++) {
+        let elemento = filteredList[index];
+        console.log(elemento)
+        createGasCard(elemento);
+        if (filteredList.length - 1 == index) {
+          generador = "";
         }
       }
     });
