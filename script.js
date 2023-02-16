@@ -98,7 +98,7 @@ async function busqueda() {
       }
   } else {
     document.getElementById("contenedorResultados").innerHTML =
-      "Municipio no encontrado";
+    "<h3 class='notFound'>Municipio no encontrado...</h3>";
   }
 }
 
@@ -136,7 +136,6 @@ function traductor(elemento) {
   return newElemento;
 }
 function createGasCard(elemento) {
-  //console.log(generador)
   generador += `
 		<div class="carta" id="carta">
     <div class="stat-title">
@@ -166,7 +165,6 @@ function createGasCard(elemento) {
 		</div>
 		`;
   document.getElementById("contenedorResultados").innerHTML = generador;
-  //console.log(generador)
 }
 
 //funcion en la que filtraremos las cartas en funcion de lo que seleccionemos
@@ -198,7 +196,7 @@ function gasFilter() {
 
 function orderByCheap() {
   let cheapFilter = document.getElementById("cheapFilter");
-  const listaGasolineras = munGasListTrad;
+  let listaGasolineras = munGasListTrad;
 
   if (cheapFilter.value == "diesel") {
     listaGasolineras.sort((precio1, precio2) =>
@@ -216,8 +214,12 @@ function orderByCheap() {
     );
   }
 
-  listaGasolineras.forEach((gasolinera) => {
+  listaGasolineras.forEach((gasolinera, index) => {
     createGasCard(gasolinera);
+    if (listaGasolineras.length -1 == index){
+      generador= "";
+      listaGasolineras = [];
+    }
   });
 }
 
@@ -253,7 +255,6 @@ async function getCAMun(ccaaID) {
   )
     .then((response) => response.json())
     .then((data) => {
-      //console.log(data);
     });
 }
 async function getDataAPI(locationId) {
@@ -283,7 +284,6 @@ async function getCloseGas(nuevaCoordS, nuevaCoordN, nuevaCoordE, nuevaCoordO) {
       }
       for (let index = 0; index < filteredList.length; index++) {
         let elemento = filteredList[index];
-        console.log(elemento)
         createGasCard(elemento);
         if (filteredList.length - 1 == index) {
           generador = "";

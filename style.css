@@ -47,6 +47,13 @@ body {
   background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
 }
 
+.welcomeText,
+.notFound{
+  font-weight: bold;
+  margin-top: 6%;
+
+}
+
 #contenedorResultados {
   display: flex;
   gap: 20px;
