@@ -43,6 +43,7 @@
             class="d-flex flex-wrap align-items-center justify-content-between"
           >
             <div class="d-flex align-items-center">
+              <!-- Logo -->
               <img
                 src="./img/logos/logo-gas-guru-no-letras.png"
                 alt="Logo GasGurú"
@@ -52,6 +53,7 @@
               <h1 class="text-center header-title">GasGurú</h1>
             </div>
 
+            <!-- Barra de búsqueda -->
             <div class="search-container">
               <input
                 type="text"
@@ -61,6 +63,7 @@
               />
             </div>
 
+            <!-- Filtro combusitble (select) -->
             <div>
               <select name="gasFilter" id="gasFilter" onchange="gasFilter()">
                 <option value="">Seleccionar combustible...</option>
@@ -70,6 +73,7 @@
               </select>
             </div>
 
+            <!-- Filtro precio más barato (select) -->
             <div>
               <select
                 name="cheapFilter"
@@ -83,6 +87,7 @@
               </select>
             </div>
 
+            <!-- Localizame -->
             <div>
               <button id="location">
                 <i class="fa fa-map-marker"></i>
@@ -91,14 +96,13 @@
           </div>
         </div>
       </div>
-      <!-- Cabecero con imagen nombre (se queda fija en la página)-->
     </header>
-    <!-- Implementar un menu? -->
+
+    <!-- Página que irá cambiando según se hagan consultas-->
     <main>
       <div id="contenedorResultados">
         <h1 class="welcomeText">Bienvenido a GasGurú</h1>
       </div>
-      <!-- Página que irá cambiando según se hagan consultas-->
     </main>
 
     <!-- Footer -->

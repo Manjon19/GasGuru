@@ -8,21 +8,28 @@ header {
   background-color: #22cbff;
 }
 
+/* Título header */
 .header-title {
   color: white;
 }
 
 body {
-  min-height: 100vh;
+  min-height: 150vh;
   display: flex;
   flex-direction: column;
+  background-image: url(./img/fondo-bg.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: auto;
 }
 
+/* Logo header */
 .logo {
   height: 100px;
   width: 125px;
 }
 
+/* Contenedor para el input de la búsqueda */
 .search-container {
   margin: 2%;
   display: flex;
@@ -30,6 +37,7 @@ body {
   justify-content: center;
 }
 
+/* Selects para filtros */
 #gasFilter,
 #cheapFilter {
   display: grid;
@@ -47,13 +55,14 @@ body {
   background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
 }
 
+/* Texto de bienvenida */
 .welcomeText,
-.notFound{
+.notFound {
   font-weight: bold;
-  margin-top: 6%;
-
+  margin-top: 2%;
 }
 
+/* Contenedor de resultados */
 #contenedorResultados {
   display: flex;
   gap: 20px;
@@ -64,6 +73,7 @@ body {
   margin-bottom: 10%;
 }
 
+/* Estilo cartas */
 .cardTitle {
   text-align: center;
   display: block;
@@ -131,6 +141,7 @@ body {
   width: 30px;
 }
 
+/* Footer */
 footer {
   background-color: #22cbff;
   text-align: center;
@@ -138,10 +149,6 @@ footer {
   margin-top: auto;
 }
 
-.redes {
-  width: 40px;
-  height: 40px;
-}
 /* Input */
 #buscar {
   text-align: left;
@@ -279,6 +286,7 @@ footer {
   cursor: auto;
 }
 
+/* Media queries */
 @media (max-width: 767px) {
   .logo {
     height: 75px;

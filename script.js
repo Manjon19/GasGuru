@@ -2,16 +2,33 @@ const buscar = document.getElementById("buscar");
 const ca = document.getElementById("CCAA");
 const btn_loc = document.getElementById("location");
 btn_loc.addEventListener("click", geoLocalizacion);
+
 let arrayAPI = [];
+// Array que contiene los municipios y su información
 let locationList;
+// Array que contiene las comunidades autónomas y su información
 let ccaaList;
+// Array que se llena con los datos de gasolineras de un municipio a partir de su ID
 let munGasList = [];
 let generador = "";
+// lat y lon son variables que se llenan con la latitud y longitud del usuario, obtenidas mediante geolocalización.
 let lat = "";
 let lon = "";
+// Array que contiene los datos de gasolineras de un municipio, pero con los nombres de las variables en español, en lugar de inglés
 let munGasListTrad = [];
+// Array que se llena con los datos de gasolineras cercanas a la ubicación del usuario. Se utiliza en la función showCloseGas() para mostrar las gasolineras en la pantalla.
 let closeGasList = [];
-//Metodo de localizacion para obtener gasolineras cercanas.
+
+/* El método geoLoacalizacion() utiliza la API de geolocalización del navegador para obtener
+ la ubicación actual del usuario. Si la API está disponible, el método llama a la función "getCurrentPosition"
+  para obtener la posición actual del usuario. 
+  
+  Después de obtener la posición actual del usuario, el método utiliza la función "setTimeout" para esperar un segundo 
+  antes de realizar más operaciones. Durante este tiempo de espera, se utilizan las coordenadas de latitud y longitud 
+  obtenidas para llamar a la función rastreator() cuatro veces, cada vez con una dirección diferente: "norte", "sur", 
+  "este" y "oeste".
+  
+  Finalmente, la función "getCloseGas" se llama con estas cuatro nuevas ubicaciones como parámetros.*/
 function geoLocalizacion() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position);
@@ -24,6 +41,11 @@ function geoLocalizacion() {
     }, 1000);
   }
 }
+
+/* Este método toma como entrada una ubicación geográfica representada por su latitud y longitud, 
+  una distancia en kilómetros y una dirección en la cual se desea mover esa ubicación. Luego, 
+  devuelve una nueva ubicación  geográfica que se encuentra a una distancia determinada en la dirección 
+  especificada. */
 function rastreator(lat, long, distance, direction) {
   const earthRadius = 6371; // Radio de la Tierra en kilómetros
   const latRads = (lat * Math.PI) / 180; // Convertir latitud a radianes
@@ -32,7 +54,8 @@ function rastreator(lat, long, distance, direction) {
 
   // Convertir distancia en kilómetros a distancia en grados de latitud y longitud
   const dLat = (distanceKm / earthRadius) * (180 / Math.PI);
-  const dLong = (distanceKm / earthRadius) * (180 / Math.PI) / Math.cos(latRads);
+  const dLong =
+    ((distanceKm / earthRadius) * (180 / Math.PI)) / Math.cos(latRads);
 
   // Calcular nueva latitud y longitud en grados
   let newLatDeg, newLongDeg;
@@ -59,6 +82,10 @@ function rastreator(lat, long, distance, direction) {
 
   return { latitud: newLatDeg, longitud: newLongDeg };
 }
+
+/* Dentro del método, se extraen las coordenadas de la posición del usuario 
+(latitud y longitud) a partir del objeto pos, y se asignan a las variables lat 
+y lon, respectivamente. */
 async function position(pos) {
   const crd = pos.coords;
   lat = crd.latitude;
@@ -68,9 +95,15 @@ async function position(pos) {
 getLocationList();
 getCCAAList();
 
+/* El método busqueda() es una función asíncrona que realiza una búsqueda de precios 
+de combustibles en una ubicación especificada. */
 async function busqueda() {
   munGasListTrad = [];
-  if (locationList.find((element) => element.Municipio.toLowerCase() == buscar.value.toLowerCase())) {
+  if (
+    locationList.find(
+      (element) => element.Municipio.toLowerCase() == buscar.value.toLowerCase()
+    )
+  ) {
     let locationID = locationList.find(
       (element) => element.Municipio.toLowerCase() == buscar.value.toLowerCase()
     ).IDMunicipio;
@@ -82,26 +115,29 @@ async function busqueda() {
       );
     });
 
-      for (let index = 0; index < filteredList.length; index++) {
-        let elemento = filteredList[index];
-        let nuevoElemento = traductor(elemento);
-        createGasCard(nuevoElemento);
-        munGasListTrad.push(nuevoElemento);
-        if (filteredList.length - 1 == index) {
-          generador = "";
-        }
-      }
+    for (let index = 0; index < filteredList.length; index++) {
+      let elemento = filteredList[index];
+      let nuevoElemento = traductor(elemento);
       createGasCard(nuevoElemento);
       munGasListTrad.push(nuevoElemento);
       if (filteredList.length - 1 == index) {
         generador = "";
       }
+    }
+    createGasCard(nuevoElemento);
+    munGasListTrad.push(nuevoElemento);
+    if (filteredList.length - 1 == index) {
+      generador = "";
+    }
   } else {
     document.getElementById("contenedorResultados").innerHTML =
-    "<h3 class='notFound'>Municipio no encontrado...</h3>";
+      "<h3 class='notFound'>Municipio no encontrado...</h3>";
   }
 }
 
+/* El método traductor() es una función que recibe un objeto elemento que representa un registro
+ de precios de combustibles, y devuelve un nuevo objeto con las mismas propiedades, pero con nombres 
+ de propiedad modificados y valores formateados. */
 function traductor(elemento) {
   let newElemento = {};
   for (let key in elemento) {
@@ -135,6 +171,11 @@ function traductor(elemento) {
   }
   return newElemento;
 }
+
+/* Este método crea una tarjeta de información de estación de gasolina en formato HTML y la agrega al contenedor
+ de resultados. Toma un objeto "elemento" como entrada y usa sus propiedades para mostrar la información en la tarjeta. 
+ El método usa un acumulador de texto llamado "generador" para agregar la información de la tarjeta en formato HTML y 
+ finalmente lo agrega al contenedor de resultados mediante la propiedad "innerHTML" del elemento HTML correspondiente. */
 function createGasCard(elemento) {
   generador += `
 		<div class="carta" id="carta">
@@ -167,7 +208,12 @@ function createGasCard(elemento) {
   document.getElementById("contenedorResultados").innerHTML = generador;
 }
 
-//funcion en la que filtraremos las cartas en funcion de lo que seleccionemos
+/* La función gasFilter() filtra las tarjetas de gas según el tipo de combustible seleccionado en el menú desplegable
+ de filtro de combustible en la página web. La función comienza recuperando las tarjetas de gas de la página web y el 
+ elemento select del menú desplegable de filtro. Después, para cada tarjeta de gas, se establece su estilo de visualización 
+ en "flex" (es decir, se muestra) y se verifica si el valor del menú desplegable de filtro coincide con "diesel", "gasolina95"
+  o "gasolina98". Si el valor coincide, se verifica si el precio del combustible correspondiente en la tarjeta es 
+  "N/A" (no disponible). Si el precio es "N/A", se establece el estilo de visualización de la tarjeta en "none" (es decir, se oculta).  */
 function gasFilter() {
   let cards = document.getElementsByClassName("carta");
   let gasFilter = document.getElementById("gasFilter");
@@ -194,6 +240,11 @@ function gasFilter() {
   }
 }
 
+/* Esta función ordena la lista de gasolineras según el tipo de combustible y los muestra en orden ascendente de precio en
+ una lista de tarjetas de gasolineras. La función obtiene el valor del elemento de entrada "cheapFilter" para determinar qué 
+ tipo de combustible se va a ordenar. A continuación, utiliza la función "comparation" para comparar el precio de cada gasolinera 
+ para ese tipo de combustible, y luego utiliza el método "sort" para ordenar la lista de gasolineras en función de los precios. 
+ Luego, se llama a la función "createGasCard" para generar una nueva lista de tarjetas de gasolineras ordenadas. */
 function orderByCheap() {
   let cheapFilter = document.getElementById("cheapFilter");
   let listaGasolineras = munGasListTrad;
@@ -216,15 +267,16 @@ function orderByCheap() {
 
   listaGasolineras.forEach((gasolinera, index) => {
     createGasCard(gasolinera);
-    if (listaGasolineras.length -1 == index){
-      generador= "";
+    if (listaGasolineras.length - 1 == index) {
+      generador = "";
       listaGasolineras = [];
     }
   });
 }
 
+/* La función comparation() es una función de comparación que se utiliza en la función orderByCheap() para 
+ordenar una lista de objetos de gasolineras según su precio. */
 function comparation(a, b) {
-  //metodo hecho para ordenar parametros
   if (b < a) {
     return 1;
   } else if (a < b) {
@@ -234,6 +286,10 @@ function comparation(a, b) {
   }
 }
 
+/* Este método utiliza la función fetch para obtener datos desde un archivo JSON ubicado en la ruta especificada. 
+Luego, convierte la respuesta a un objeto JSON utilizando el método response.json(), y finalmente asigna el objeto 
+JSON resultante a la variable locationList. El método se define con la palabra clave async para que se ejecute de 
+forma asíncrona y no bloquee la ejecución de otras partes del programa. */
 async function getLocationList() {
   await fetch("./JSONS/Municipios.json")
     .then((response) => response.json())
@@ -241,6 +297,9 @@ async function getLocationList() {
       locationList = data;
     });
 }
+
+/* Este método realiza una solicitud a un archivo JSON que contiene una lista de las Comunidades Autónomas de España 
+  y guarda esa lista en la variable ccaaList. */
 async function getCCAAList() {
   await fetch("./JSONS/CCAA.json")
     .then((response) => response.json())
@@ -248,25 +307,36 @@ async function getCCAAList() {
       ccaaList = data;
     });
 }
+
+/* Este método utiliza el método fetch para hacer una llamada a una API de precios de combustible en España. */
 async function getCAMun(ccaaID) {
   await fetch(
     "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/Listados/MunicipiosPorProvincia/" +
-    ccaaID
+      ccaaID
   )
     .then((response) => response.json())
-    .then((data) => {
-    });
+    .then((data) => {});
 }
+
+/* Este método usa una llamada a la API para obtener los precios de los combustibles de las estaciones de servicio de una 
+ubicación determinada (identificada por locationId). La respuesta de la API se almacena en la variable munGasList. La función 
+utiliza la palabra clave async para indicar que se espera una respuesta asincrónica de la API antes de continuar ejecutando el 
+resto del código. */
 async function getDataAPI(locationId) {
   await fetch(
     "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroMunicipio/" +
-    locationId
+      locationId
   )
     .then((response) => response.json())
     .then((data) => {
       munGasList = data.ListaEESSPrecio;
     });
 }
+
+/* Este método es una función asíncrona que recupera los datos de una lista de gasolineras desde un archivo 
+JSON usando la función fetch. Luego, filtra la lista de gasolineras según su ubicación geográfica utilizando 
+las coordenadas dadas como parámetros. Finalmente, se utiliza la función createGasCard para crear una tarjeta 
+para cada gasolinera en la lista filtrada y agregarla al DOM.  */
 async function getCloseGas(nuevaCoordS, nuevaCoordN, nuevaCoordE, nuevaCoordO) {
   await fetch("./JSONS/Gasolineras.json")
     .then((response) => response.json())
@@ -274,11 +344,18 @@ async function getCloseGas(nuevaCoordS, nuevaCoordN, nuevaCoordE, nuevaCoordO) {
       let filteredList = [];
       for (let i = 0; i < data.length; i++) {
         data[i]["Latitud"] = parseFloat(data[i]["Latitud"].replace(",", "."));
-        data[i]["Longitud (WGS84)"] = parseFloat(data[i]["Longitud (WGS84)"].replace(",", "."));
-        if (nuevaCoordN["latitud"] > data[i]["Latitud"] && nuevaCoordS["latitud"] < data[i]["Latitud"]) {
-          if (nuevaCoordE["longitud"] > data[i]["Longitud (WGS84)"] && nuevaCoordO["longitud"] < data[i]["Longitud (WGS84)"]) {
+        data[i]["Longitud (WGS84)"] = parseFloat(
+          data[i]["Longitud (WGS84)"].replace(",", ".")
+        );
+        if (
+          nuevaCoordN["latitud"] > data[i]["Latitud"] &&
+          nuevaCoordS["latitud"] < data[i]["Latitud"]
+        ) {
+          if (
+            nuevaCoordE["longitud"] > data[i]["Longitud (WGS84)"] &&
+            nuevaCoordO["longitud"] < data[i]["Longitud (WGS84)"]
+          ) {
             filteredList.push(traductor(data[i]));
-
           }
         }
       }
